@@ -71,6 +71,7 @@ public final class Logger {
     private static String DEFAULT_TAG = "";
 
     private static LogHelper helper = new LoggerHelper();
+    private static StringBuilder builder = new StringBuilder();
 
     private Logger() {
     }
@@ -98,6 +99,10 @@ public final class Logger {
         if (helper != null) {
             helper.clearAdapters();
         }
+    }
+
+    public static void append(String msg) {
+        builder.append(msg);
     }
 
     public static void v(String msg) {
@@ -154,6 +159,10 @@ public final class Logger {
 
     private static void println(int level, String tag, String msg, Throwable e) {
         if (helper != null) {
+            if (builder.length() > 0) {
+                msg = builder.append(msg).toString();
+                builder.setLength(0);
+            }
             helper.log(level, tag, msg, e);
         }
     }

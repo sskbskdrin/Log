@@ -21,10 +21,6 @@ allprojects {
     repositories {
         google()
         jcenter()
-        mavenCentral()
-        maven {
-            url "https://dl.bintray.com/sskbskdrin/maven" //Maven库地址
-        }
     }
 }
 
