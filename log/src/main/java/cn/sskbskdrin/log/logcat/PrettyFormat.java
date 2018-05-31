@@ -5,12 +5,10 @@ import cn.sskbskdrin.log.Logger;
 
 /**
  * Draws borders around the given log message along with additional information such as :
- * <p>
  * <ul>
  * <li>Thread information</li>
  * <li>Method stack trace</li>
  * </ul>
- * <p>
  * <pre>
  *  ┌────────Thread information──────────────────
  *  │ Method stack history
@@ -18,7 +16,6 @@ import cn.sskbskdrin.log.Logger;
  *  │ Log message
  *  └────────────────────────────────────────────
  * </pre>
- * <p>
  * <h3>Customize</h3>
  */
 public class PrettyFormat implements Format {

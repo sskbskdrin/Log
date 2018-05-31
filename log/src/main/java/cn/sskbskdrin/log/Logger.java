@@ -10,43 +10,22 @@ package cn.sskbskdrin.log;
  *  │ But more pretty, simple and powerful
  *  └────────────────────────────────────────────
  * </pre>
- * <p>
  * <h3>How to use it</h3>
  * Initialize it first
  * <pre><code>
- *   Logger.addLogAdapter(new LogcatPrinter());
+ *   Logger.addPinter(new LogcatPrinter());
  * </code></pre>
  * <p>
  * And use the appropriate static Logger methods.
- * <p>
+ * </p>
  * <pre><code>
  *   Logger.d("debug");
  *   Logger.e("error");
  *   Logger.w("warning");
  *   Logger.v("verbose");
  *   Logger.i("information");
- *   Logger.wtf("What a Terrible Failure");
  * </code></pre>
- * <p>
- * <h3>String format arguments are supported</h3>
- * <pre><code>
- *   Logger.d("hello %s", "world");
- * </code></pre>
- * <p>
- * <h3>Collections are support ed(only available for debug logs)</h3>
- * <pre><code>
- *   Logger.d(MAP);
- *   Logger.d(SET);
- *   Logger.d(LIST);
- *   Logger.d(ARRAY);
- * </code></pre>
- * <p>
  * <h3>Json and Xml support (output will be in debug level)</h3>
- * <pre><code>
- *   Logger.json(JSON_CONTENT);
- *   Logger.xml(XML_CONTENT);
- * </code></pre>
- * <p>
  * <h3>Customize Logger</h3>
  * Based on your needs, you can change the following settings:
  * <ul>
