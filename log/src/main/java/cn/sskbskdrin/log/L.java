@@ -13,20 +13,20 @@ package cn.sskbskdrin.log;
  * <h3>How to use it</h3>
  * Initialize it first
  * <pre><code>
- *   Logger.addPinter(new LogcatPrinter());
+ *   L.addPinter(new LogcatPrinter());
  * </code></pre>
  * <p>
- * And use the appropriate static Logger methods.
+ * And use the appropriate static L methods.
  * </p>
  * <pre><code>
- *   Logger.d("debug");
- *   Logger.e("error");
- *   Logger.w("warning");
- *   Logger.v("verbose");
- *   Logger.i("information");
+ *   L.d("debug");
+ *   L.e("error");
+ *   L.w("warning");
+ *   L.v("verbose");
+ *   L.i("information");
  * </code></pre>
  * <h3>Json and Xml support (output will be in debug level)</h3>
- * <h3>Customize Logger</h3>
+ * <h3>Customize L</h3>
  * Based on your needs, you can change the following settings:
  * <ul>
  * <li>Different {@link Printer}</li>
@@ -38,7 +38,7 @@ package cn.sskbskdrin.log;
  * @see Format
  * @see LogStrategy
  */
-public final class Logger {
+public final class L {
 
     public static final int VERBOSE = 2;
     public static final int DEBUG = 3;
@@ -47,12 +47,12 @@ public final class Logger {
     public static final int ERROR = 6;
     public static final int ASSERT = 7;
 
-    private static String DEFAULT_TAG = "";
+    private static String DEFAULT_TAG = "DEFAULT_TAG";
 
     private static LogHelper helper = new LoggerHelper();
     private static StringBuilder builder = new StringBuilder();
 
-    private Logger() {
+    private L() {
     }
 
     public static void tag(String tag, String defaultTag) {
@@ -65,7 +65,7 @@ public final class Logger {
     }
 
     public static void helper(LogHelper helper) {
-        Logger.helper = helper;
+        L.helper = helper;
     }
 
     public static void addPinter(Printer printer) {

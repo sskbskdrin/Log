@@ -6,12 +6,12 @@ import java.util.Locale;
 
 import cn.sskbskdrin.log.Format;
 
-import static cn.sskbskdrin.log.Logger.ASSERT;
-import static cn.sskbskdrin.log.Logger.DEBUG;
-import static cn.sskbskdrin.log.Logger.ERROR;
-import static cn.sskbskdrin.log.Logger.INFO;
-import static cn.sskbskdrin.log.Logger.VERBOSE;
-import static cn.sskbskdrin.log.Logger.WARN;
+import static cn.sskbskdrin.log.L.ASSERT;
+import static cn.sskbskdrin.log.L.DEBUG;
+import static cn.sskbskdrin.log.L.ERROR;
+import static cn.sskbskdrin.log.L.INFO;
+import static cn.sskbskdrin.log.L.VERBOSE;
+import static cn.sskbskdrin.log.L.WARN;
 
 /**
  * @author ex-keayuan001

@@ -13,16 +13,16 @@ public class DiskPrinter implements Printer {
     private DiskLogStrategy strategy;
 
     public DiskPrinter() {
-        this(null, null);
+        this(null);
+    }
+
+    public DiskPrinter(DiskLogStrategy strategy) {
+        this(strategy, new DiskFormat());
     }
 
     public DiskPrinter(DiskLogStrategy strategy, Format formatStrategy) {
         this.strategy = strategy;
         this.format = formatStrategy;
-
-        if (this.format == null) {
-            this.format = new DiskFormat();
-        }
     }
 
     @Override

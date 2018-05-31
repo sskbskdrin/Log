@@ -20,5 +20,5 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'cn.sskbskdrin:log:0.0.2'
+    implementation 'cn.sskbskdrin:log:0.0.3'
 }

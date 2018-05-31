@@ -1,7 +1,7 @@
 package cn.sskbskdrin.log.logcat;
 
 import cn.sskbskdrin.log.Format;
-import cn.sskbskdrin.log.Logger;
+import cn.sskbskdrin.log.L;
 
 /**
  * Draws borders around the given log message along with additional information such as :
@@ -66,6 +66,8 @@ public class PrettyFormat implements Format {
     }
 
     private void logHeaderContent(StringBuilder builder) {
+        mBuilder.append(' ');
+        mBuilder.append(NEW_LINE);
         Thread thread = Thread.currentThread();
         builder.append(String.format(THREAD_INFO, thread.getName(), android.os.Process.myTid()));
     }
@@ -110,7 +112,7 @@ public class PrettyFormat implements Format {
         for (int i = MIN_STACK_OFFSET; i < trace.length; i++) {
             StackTraceElement e = trace[i];
             String name = e.getClassName();
-            if (!name.equals(Logger.class.getName())) {
+            if (!name.equals(L.class.getName())) {
                 return i;
             }
         }
@@ -119,7 +121,7 @@ public class PrettyFormat implements Format {
 
     @Override
     public String formatTag(int priority, String tag) {
-        logMethod = priority >= Logger.WARN;
+        logMethod = priority >= L.WARN;
         return tag;
     }
 

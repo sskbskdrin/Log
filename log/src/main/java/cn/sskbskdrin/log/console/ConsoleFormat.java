@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import cn.sskbskdrin.log.Format;
-import cn.sskbskdrin.log.Logger;
+import cn.sskbskdrin.log.L;
 
 /**
  * CSV formatted file logging for Android.
@@ -33,23 +33,23 @@ public class ConsoleFormat implements Format {
         String type = "";
         String start = "";
         switch (priority) {
-            case Logger.VERBOSE:
+            case L.VERBOSE:
                 type = " V/";
                 start = "\u001b[30;37m";
                 break;
-            case Logger.DEBUG:
+            case L.DEBUG:
                 type = " D/";
                 start = "\u001b[30;34m";
                 break;
-            case Logger.INFO:
+            case L.INFO:
                 type = " I/";
                 start = "\u001b[30;32m";
                 break;
-            case Logger.WARN:
+            case L.WARN:
                 type = " W/";
                 start = "\u001b[30;33m";
                 break;
-            case Logger.ERROR:
+            case L.ERROR:
                 type = " E/";
                 start = "\u001b[30;31m";
                 break;

@@ -35,7 +35,7 @@ public class LogcatPrinter implements Printer {
             message = format.format(message);
         }
         if (isNew) {
-            Log.println(priority, tag, " " + System.getProperty("line.separator") + message);
+            Log.println(priority, tag, message);
         } else {
             String[] result = message.split(System.getProperty("line.separator"));
             for (String msg : result) {
