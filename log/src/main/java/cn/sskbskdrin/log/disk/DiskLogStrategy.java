@@ -54,9 +54,11 @@ public class DiskLogStrategy extends HandlerThread implements LogStrategy {
 
     @Override
     public void log(int level, String tag, String message) {
-        mHandler.removeMessages(WHAT_CLOSE_FILE);
-        Message.obtain(mHandler, level, message).sendToTarget();
-        mHandler.sendEmptyMessageDelayed(WHAT_CLOSE_FILE, 1000);
+        if (mHandler != null) {
+            mHandler.removeMessages(WHAT_CLOSE_FILE);
+            Message.obtain(mHandler, level, message).sendToTarget();
+            mHandler.sendEmptyMessageDelayed(WHAT_CLOSE_FILE, 1000);
+        }
     }
 
     private static class WriteHandler extends Handler {

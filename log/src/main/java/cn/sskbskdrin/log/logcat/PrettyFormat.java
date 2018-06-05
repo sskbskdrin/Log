@@ -132,17 +132,19 @@ public class PrettyFormat implements Format {
         if (logMethod) {
             logMethod(mBuilder);
         }
-        if (msg.length() <= CHUNK_SIZE) {
-            logContent(mBuilder, msg);
-        } else {
-            byte[] bytes = msg.getBytes();
-            for (int i = 0; i < msg.length(); i += CHUNK_SIZE) {
-                int count = Math.min(bytes.length - i, CHUNK_SIZE);
-                logContent(mBuilder, msg.substring(i, i + count));
+        String[] temp = msg.split(NEW_LINE);
+        for (String content : temp) {
+            if (content.length() <= CHUNK_SIZE) {
+                logContent(mBuilder, content);
+            } else {
+                byte[] bytes = content.getBytes();
+                for (int i = 0; i < content.length(); i += CHUNK_SIZE) {
+                    int count = Math.min(bytes.length - i, CHUNK_SIZE);
+                    logContent(mBuilder, content.substring(i, i + count));
+                }
             }
         }
         logBottomBorder(mBuilder);
         return mBuilder.toString();
     }
-
 }
