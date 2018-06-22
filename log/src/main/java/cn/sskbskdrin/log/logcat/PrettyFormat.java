@@ -137,9 +137,8 @@ public class PrettyFormat implements Format {
             if (content.length() <= CHUNK_SIZE) {
                 logContent(mBuilder, content);
             } else {
-                byte[] bytes = content.getBytes();
                 for (int i = 0; i < content.length(); i += CHUNK_SIZE) {
-                    int count = Math.min(bytes.length - i, CHUNK_SIZE);
+                    int count = Math.min(content.length() - i, CHUNK_SIZE);
                     logContent(mBuilder, content.substring(i, i + count));
                 }
             }
