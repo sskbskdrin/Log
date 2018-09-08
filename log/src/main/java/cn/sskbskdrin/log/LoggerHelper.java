@@ -13,9 +13,8 @@ class LoggerHelper implements LogHelper {
     private final Set<Printer> logPrinters = new HashSet<>();
 
     @Override
-    public LogHelper tag(String tag) {
+    public void tag(String tag) {
         localTag = tag;
-        return this;
     }
 
     @Override

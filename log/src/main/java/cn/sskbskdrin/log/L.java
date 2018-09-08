@@ -75,7 +75,6 @@ public final class L {
     }
 
     /**
-     * /**
      * 设置全局tag
      *
      * @param globalTag  全局tag
@@ -101,7 +100,6 @@ public final class L {
 
     /**
      * 添加打印者
-     * <p>
      * <ul>
      * <li>Different {@link cn.sskbskdrin.log.logcat.LogcatPrinter}</li>
      * <li>Different {@link cn.sskbskdrin.log.disk.DiskPrinter}</li>
@@ -112,7 +110,6 @@ public final class L {
      * @see cn.sskbskdrin.log.logcat.LogcatPrinter
      * @see cn.sskbskdrin.log.disk.DiskPrinter
      * @see cn.sskbskdrin.log.console.ConsolePrinter
-     * </p>
      */
     public static void addPinter(Printer... printers) {
         if (helper != null && printers != null) {
@@ -247,7 +244,8 @@ public final class L {
                 Transformer transformer = TransformerFactory.newInstance().newTransformer();
                 transformer.setOutputProperty(OutputKeys.METHOD, "html");
                 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(INDENT));
+                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String
+                        .valueOf(INDENT));
                 transformer.transform(xmlInput, xmlOutput);
                 return "\n" + xmlOutput.getWriter().toString() + "\n";
             }

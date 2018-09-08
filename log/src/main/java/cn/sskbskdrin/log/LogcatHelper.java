@@ -27,10 +27,7 @@ public class LogcatHelper {
     private static String PATH_LOGCAT;
     private LogDumper mLogDumper = null;
     private int mPId;
-
-    /**
-     * 初始化目录
-     */
+    
     public void init(Context context) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             PATH_LOGCAT = Environment.getExternalStorageDirectory().getAbsolutePath() + File

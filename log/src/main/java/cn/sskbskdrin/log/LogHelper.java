@@ -30,7 +30,7 @@ public interface LogHelper {
      *
      * @param tag 全局tag
      */
-    LogHelper tag(String tag);
+    void tag(String tag);
 
     /**
      * 打印日志
