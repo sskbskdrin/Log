@@ -50,7 +50,7 @@ public class PrettyFormat implements Format {
     private final StringBuilder mBuilder;
 
     public PrettyFormat() {
-        this(6, 0);
+        this(8, 0);
     }
 
     public PrettyFormat(int count, int offset) {

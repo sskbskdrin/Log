@@ -19,7 +19,7 @@ import cn.sskbskdrin.log.LogStrategy;
  *
  * @author ex-keayuan001
  */
-public class DiskLogStrategy extends HandlerThread implements LogStrategy {
+class DiskLogStrategy extends HandlerThread implements LogStrategy {
 
     private static final int WHAT_CLOSE_FILE = 1001;
 
@@ -53,7 +53,7 @@ public class DiskLogStrategy extends HandlerThread implements LogStrategy {
     }
 
     @Override
-    public void log(int level, String tag, String message) {
+    public void print(int level, String tag, String message) {
         if (mHandler != null) {
             mHandler.removeMessages(WHAT_CLOSE_FILE);
             Message.obtain(mHandler, level, message).sendToTarget();
@@ -108,7 +108,8 @@ public class DiskLogStrategy extends HandlerThread implements LogStrategy {
             }
         }
 
-        private FileOutputStream getFileOutputStream(String folderName, String fileName) throws FileNotFoundException {
+        private FileOutputStream getFileOutputStream(String folderName, String fileName) throws
+                FileNotFoundException {
             File folder = new File(folderName);
             if (!folder.exists()) {
                 folder.mkdirs();
@@ -121,7 +122,8 @@ public class DiskLogStrategy extends HandlerThread implements LogStrategy {
                     File temp;
                     int newFileCount = 0;
                     do {
-                        temp = new File(folder, String.format("%s%s.log", fileName, newFileCount++));
+                        temp = new File(folder, String.format("%s%s.log", fileName,
+                                newFileCount++));
                     } while (temp.exists());
                     newFile.renameTo(temp);
                     newFile = new File(folder, fileName + ".log");

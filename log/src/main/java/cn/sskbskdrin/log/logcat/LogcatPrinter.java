@@ -5,17 +5,15 @@ import android.util.Log;
 import cn.sskbskdrin.log.Format;
 import cn.sskbskdrin.log.Printer;
 
-public class LogcatPrinter implements Printer {
+public class LogcatPrinter extends Printer {
 
-    private final Format format;
     private boolean isNew = true;
 
     public LogcatPrinter() {
-        this.format = new PrettyFormat();
     }
 
-    public LogcatPrinter(Format formatStrategy) {
-        this.format = formatStrategy;
+    public LogcatPrinter(Format format) {
+        super(format);
     }
 
     public LogcatPrinter setNew(boolean isNew) {
@@ -24,16 +22,7 @@ public class LogcatPrinter implements Printer {
     }
 
     @Override
-    public boolean isLoggable(int priority, String tag) {
-        return true;
-    }
-
-    @Override
-    public synchronized void log(int priority, String tag, String message) {
-        if (format != null) {
-            tag = format.formatTag(priority, tag);
-            message = format.format(message);
-        }
+    public void print(int priority, String tag, String message) {
         if (isNew) {
             Log.println(priority, tag, message);
         } else {

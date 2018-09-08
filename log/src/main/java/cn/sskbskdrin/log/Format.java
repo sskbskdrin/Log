@@ -1,6 +1,5 @@
 package cn.sskbskdrin.log;
 
-import cn.sskbskdrin.log.disk.DiskFormat;
 import cn.sskbskdrin.log.logcat.PrettyFormat;
 
 /**
@@ -8,7 +7,6 @@ import cn.sskbskdrin.log.logcat.PrettyFormat;
  *
  * @author ex-keayuan001
  * @see PrettyFormat
- * @see DiskFormat
  */
 public interface Format {
 

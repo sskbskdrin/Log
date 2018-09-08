@@ -13,5 +13,5 @@ public interface LogStrategy {
      * @param tag      is the given tag for the log message.
      * @param message  is the given message for the log message.
      */
-    void log(int priority, String tag, String message);
+    void print(int priority, String tag, String message);
 }

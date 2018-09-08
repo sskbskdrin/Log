@@ -1,43 +1,67 @@
 package cn.sskbskdrin.log.disk;
 
-import cn.sskbskdrin.log.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import cn.sskbskdrin.log.Printer;
 
-/**
- * This is used to saves log messages to the disk.
- * By default it uses {@link DiskFormat} to translates text message into CSV format.
- */
-public class DiskPrinter implements Printer {
+import static cn.sskbskdrin.log.L.ASSERT;
+import static cn.sskbskdrin.log.L.DEBUG;
+import static cn.sskbskdrin.log.L.ERROR;
+import static cn.sskbskdrin.log.L.INFO;
+import static cn.sskbskdrin.log.L.VERBOSE;
+import static cn.sskbskdrin.log.L.WARN;
 
-    private Format format;
-    private DiskLogStrategy strategy;
+public class DiskPrinter extends Printer {
 
-    public DiskPrinter() {
-        this(null);
+    private static final String SEPARATOR = " ";
+    private final Date date = new Date();
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd HH:mm:ss.SSS", Locale
+            .US);
+
+    public DiskPrinter(String path) {
+        this(new DiskLogStrategy(path));
     }
 
     public DiskPrinter(DiskLogStrategy strategy) {
-        this(strategy, new DiskFormat());
-    }
-
-    public DiskPrinter(DiskLogStrategy strategy, Format formatStrategy) {
-        this.strategy = strategy;
-        this.format = formatStrategy;
+        super(strategy);
     }
 
     @Override
-    public boolean isLoggable(int priority, String tag) {
-        return true;
+    public String formatTag(int priority, String tag) {
+        if (tag == null) {
+            tag = "";
+        }
+        date.setTime(System.currentTimeMillis());
+        return dateFormat.format(date) + SEPARATOR + logLevel(priority) + SEPARATOR + tag;
     }
 
     @Override
-    public void log(int priority, String tag, String message) {
-        if (format != null) {
-            tag = format.formatTag(priority, tag);
-            message = format.format(message);
+    public String format(String msg) {
+        return msg + NEW_LINE;
+    }
+
+    private static String logLevel(int value) {
+        switch (value) {
+            case VERBOSE:
+                return "VERBOSE";
+            case DEBUG:
+                return "DEBUG";
+            case INFO:
+                return "INFO";
+            case WARN:
+                return "WARN";
+            case ERROR:
+                return "ERROR";
+            case ASSERT:
+                return "ASSERT";
+            default:
+                return "UNKNOWN";
         }
-        if (strategy != null) {
-            strategy.log(priority, tag, tag + ": " + message);
-        }
+    }
+
+    @Override
+    public void print(int priority, String tag, String message) {
     }
 }

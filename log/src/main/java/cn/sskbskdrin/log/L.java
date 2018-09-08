@@ -1,5 +1,20 @@
 package cn.sskbskdrin.log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.StringReader;
+import java.io.StringWriter;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
 /**
  * <pre>
  *  ┌────────────────────────────────────────────
@@ -48,6 +63,10 @@ public final class L {
     public static final int ASSERT = 7;
 
     private static String DEFAULT_TAG = "DEFAULT_TAG";
+    private static int INDENT = 2;
+
+    private static boolean enableJson = true;
+    private static boolean enableXML = true;
 
     private static LogHelper helper = new LoggerHelper();
     private static StringBuilder builder = new StringBuilder();
@@ -55,32 +74,84 @@ public final class L {
     private L() {
     }
 
-    public static void tag(String tag, String defaultTag) {
+    /**
+     * /**
+     * 设置全局tag
+     *
+     * @param globalTag  全局tag
+     * @param defaultTag 默认tag
+     */
+    public static void tag(String globalTag, String defaultTag) {
         if (helper != null) {
-            helper.tag(tag);
+            helper.tag(globalTag);
         }
         if (defaultTag != null) {
             DEFAULT_TAG = defaultTag;
         }
     }
 
+    /**
+     * 设置自定义helper
+     *
+     * @param helper 自定义LogHelper
+     */
     public static void helper(LogHelper helper) {
         L.helper = helper;
     }
 
-    public static void addPinter(Printer printer) {
-        if (helper != null) {
-            helper.addAdapter(printer);
+    /**
+     * 添加打印者
+     * <p>
+     * <ul>
+     * <li>Different {@link cn.sskbskdrin.log.logcat.LogcatPrinter}</li>
+     * <li>Different {@link cn.sskbskdrin.log.disk.DiskPrinter}</li>
+     * <li>Different {@link cn.sskbskdrin.log.console.ConsolePrinter}</li>
+     * </ul>
+     *
+     * @param printers 打印者
+     * @see cn.sskbskdrin.log.logcat.LogcatPrinter
+     * @see cn.sskbskdrin.log.disk.DiskPrinter
+     * @see cn.sskbskdrin.log.console.ConsolePrinter
+     * </p>
+     */
+    public static void addPinter(Printer... printers) {
+        if (helper != null && printers != null) {
+            for (Printer printer : printers) {
+                helper.addPrinter(printer);
+            }
         }
     }
 
+    /**
+     * 清除所有打印者
+     */
     public static void clearPrinters() {
         if (helper != null) {
             helper.clearAdapters();
         }
     }
 
+    public static void enableJsonOrXml(boolean json, boolean xml) {
+        enableJson = json;
+        enableXML = xml;
+    }
+
+    public static void indent(int indent) {
+        INDENT = indent;
+    }
+
+    /**
+     * 追加打印内容，将同下一次打印一起被输出
+     *
+     * @param msg 追加内容
+     */
     public static void append(String msg) {
+        if (enableJson) {
+            msg = json(msg);
+        }
+        if (enableXML) {
+            msg = xml(msg);
+        }
         builder.append(msg);
     }
 
@@ -138,11 +209,52 @@ public final class L {
 
     private static void println(int level, String tag, String msg, Throwable e) {
         if (helper != null) {
-            if (builder.length() > 0) {
-                msg = builder.append(msg).toString();
-                builder.setLength(0);
-            }
+            append(msg);
+            msg = builder.toString();
+            builder.setLength(0);
             helper.log(level, tag, msg, e);
         }
+    }
+
+    private static String json(String json) {
+        if (json == null || json.length() == 0) {
+            json = "";
+        }
+        try {
+            json = json.trim();
+            if (json.startsWith("{")) {
+                JSONObject jsonObject = new JSONObject(json);
+                return jsonObject.toString(INDENT);
+            }
+            if (json.startsWith("[")) {
+                JSONArray jsonArray = new JSONArray(json);
+                return jsonArray.toString(INDENT);
+            }
+            return json;
+        } catch (JSONException ignored) {
+        }
+        return json;
+    }
+
+    private static String xml(String xml) {
+        if (xml == null || xml.length() == 0) {
+            xml = "";
+        }
+        try {
+            xml = xml.trim();
+            if (xml.startsWith("<")) {
+                Source xmlInput = new StreamSource(new StringReader(xml));
+                StreamResult xmlOutput = new StreamResult(new StringWriter());
+                Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                transformer.setOutputProperty(OutputKeys.METHOD, "html");
+                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String
+                        .valueOf(INDENT));
+                transformer.transform(xmlInput, xmlOutput);
+                xml = xmlOutput.getWriter().toString().replaceFirst(">", ">\n");
+            }
+        } catch (TransformerException ignored) {
+        }
+        return xml;
     }
 }
