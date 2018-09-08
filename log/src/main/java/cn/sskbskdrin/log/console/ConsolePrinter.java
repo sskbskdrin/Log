@@ -63,6 +63,9 @@ public class ConsolePrinter extends Printer {
 
     @Override
     public void print(int priority, String tag, String message) {
-        System.out.println(tag + message);
+        String[] result = message.split(NEW_LINE);
+        for (String msg : result) {
+            System.out.println(tag + msg);
+        }
     }
 }

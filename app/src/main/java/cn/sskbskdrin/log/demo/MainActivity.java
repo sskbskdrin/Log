@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
             @Override
             public void run() {
                 L.w("test" + count++);
-                if (count > 50) {
+                if (count > 10) {
                     return;
                 }
                 findViewById(android.R.id.content).postDelayed(this, 1000);
@@ -35,6 +35,7 @@ public class MainActivity extends Activity {
         L.append("\nwwwwwfsdfs");
         L.d("56789876");
         L.enableJsonOrXml(true, true);
+        L.append("sskbskdrin");
         L.d("[{\"a\":234},{\"b\":543}]");
         L.d("<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "<FrameLayout " +
                 "xmlns:android=\"http://schemas.android.com/apk/res/android\"" + "             "

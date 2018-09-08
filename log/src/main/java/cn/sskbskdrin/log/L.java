@@ -146,11 +146,17 @@ public final class L {
      * @param msg 追加内容
      */
     public static void append(String msg) {
-        if (enableJson) {
-            msg = json(msg);
-        }
-        if (enableXML) {
-            msg = xml(msg);
+        if (msg != null) {
+            String temp = null;
+            if (enableJson) {
+                temp = json(msg);
+            }
+            if (enableXML && temp == null) {
+                temp = xml(msg);
+            }
+            if (temp != null) {
+                msg = temp;
+            }
         }
         builder.append(msg);
     }
@@ -217,44 +223,36 @@ public final class L {
     }
 
     private static String json(String json) {
-        if (json == null || json.length() == 0) {
-            json = "";
-        }
+        json = json.trim();
         try {
-            json = json.trim();
             if (json.startsWith("{")) {
                 JSONObject jsonObject = new JSONObject(json);
-                return jsonObject.toString(INDENT);
+                return "\n" + jsonObject.toString(INDENT);
             }
             if (json.startsWith("[")) {
                 JSONArray jsonArray = new JSONArray(json);
-                return jsonArray.toString(INDENT);
+                return "\n" + jsonArray.toString(INDENT);
             }
-            return json;
         } catch (JSONException ignored) {
         }
-        return json;
+        return null;
     }
 
     private static String xml(String xml) {
-        if (xml == null || xml.length() == 0) {
-            xml = "";
-        }
+        xml = xml.trim();
         try {
-            xml = xml.trim();
             if (xml.startsWith("<")) {
                 Source xmlInput = new StreamSource(new StringReader(xml));
                 StreamResult xmlOutput = new StreamResult(new StringWriter());
                 Transformer transformer = TransformerFactory.newInstance().newTransformer();
                 transformer.setOutputProperty(OutputKeys.METHOD, "html");
                 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String
-                        .valueOf(INDENT));
+                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(INDENT));
                 transformer.transform(xmlInput, xmlOutput);
-                xml = xmlOutput.getWriter().toString().replaceFirst(">", ">\n");
+                return "\n" + xmlOutput.getWriter().toString() + "\n";
             }
         } catch (TransformerException ignored) {
         }
-        return xml;
+        return null;
     }
 }

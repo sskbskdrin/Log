@@ -26,7 +26,7 @@ public class LogcatPrinter extends Printer {
         if (isNew) {
             Log.println(priority, tag, message);
         } else {
-            String[] result = message.split(System.getProperty("line.separator"));
+            String[] result = message.split(NEW_LINE);
             for (String msg : result) {
                 Log.println(priority, tag, msg);
             }
