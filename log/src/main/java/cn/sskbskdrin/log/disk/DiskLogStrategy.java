@@ -56,7 +56,7 @@ class DiskLogStrategy extends HandlerThread implements LogStrategy {
     public void print(int level, String tag, String message) {
         if (mHandler != null) {
             mHandler.removeMessages(WHAT_CLOSE_FILE);
-            Message.obtain(mHandler, level, message).sendToTarget();
+            Message.obtain(mHandler, level, tag + " " + message).sendToTarget();
             mHandler.sendEmptyMessageDelayed(WHAT_CLOSE_FILE, 1000);
         }
     }
