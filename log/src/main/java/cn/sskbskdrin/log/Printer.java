@@ -88,7 +88,7 @@ public abstract class Printer implements LogStrategy, Format {
         return msg;
     }
 
-    interface Filter {
+    public interface Filter {
         boolean filter(int priority, String tag);
     }
 }
