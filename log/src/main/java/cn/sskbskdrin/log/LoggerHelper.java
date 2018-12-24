@@ -35,9 +35,7 @@ class LoggerHelper implements LogHelper {
             tag = localTag;
         }
         for (Printer printer : logPrinters) {
-            if (printer.isLoggable(priority, tag)) {
-                printer.log(priority, tag, message);
-            }
+            printer.log(priority, tag, message);
         }
     }
 
