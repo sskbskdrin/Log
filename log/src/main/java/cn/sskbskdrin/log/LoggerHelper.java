@@ -6,11 +6,18 @@ import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
 
+import cn.sskbskdrin.log.logcat.LogcatPrinter;
+
 class LoggerHelper implements LogHelper {
 
     private String localTag = "";
 
     private final Set<Printer> logPrinters = new HashSet<>();
+    private Printer logcat = new LogcatPrinter();
+
+    LoggerHelper() {
+        logPrinters.add(logcat);
+    }
 
     @Override
     public void tag(String tag) {
@@ -51,6 +58,10 @@ class LoggerHelper implements LogHelper {
 
     @Override
     public void addPrinter(Printer printer) {
+        if (logcat != null) {
+            logPrinters.remove(logcat);
+            logcat = null;
+        }
         if (!logPrinters.contains(printer)) {
             logPrinters.add(printer);
         }
