@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+//apply plugin: 'java-library'
 
 android {
     compileSdkVersion 27
@@ -21,5 +22,5 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 }
 
-
-apply from: "https://sskbskdrin.github.io/bintray.gradle"
+//apply from: "https://sskbskdrin.github.io/bintray.gradle"
+apply from: "bintray.gradle"

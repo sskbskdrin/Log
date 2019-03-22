@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
 
+import cn.sskbskdrin.log.console.ConsolePrinter;
 import cn.sskbskdrin.log.logcat.LogcatPrinter;
 
 class LoggerHelper implements LogHelper {
@@ -13,10 +14,17 @@ class LoggerHelper implements LogHelper {
     private String localTag = "";
 
     private final Set<Printer> logPrinters = new HashSet<>();
-    private Printer logcat = new LogcatPrinter();
+    private Printer defaultPrint;
+
+    private static boolean logcat;
 
     LoggerHelper() {
-        logPrinters.add(logcat);
+        try {
+            logcat = Class.forName("android.util.Log") != null;
+        } catch (ClassNotFoundException e) {
+        }
+        defaultPrint = logcat ? new LogcatPrinter() : new ConsolePrinter();
+        logPrinters.add(defaultPrint);
     }
 
     @Override
@@ -58,9 +66,12 @@ class LoggerHelper implements LogHelper {
 
     @Override
     public void addPrinter(Printer printer) {
-        if (logcat != null) {
-            logPrinters.remove(logcat);
-            logcat = null;
+        if (!logcat && printer instanceof LogcatPrinter) {
+            throw new IllegalArgumentException("环境不支持 logcat, 没有找到android.util.Log");
+        }
+        if (defaultPrint != null) {
+            logPrinters.remove(defaultPrint);
+            defaultPrint = null;
         }
         if (!logPrinters.contains(printer)) {
             logPrinters.add(printer);

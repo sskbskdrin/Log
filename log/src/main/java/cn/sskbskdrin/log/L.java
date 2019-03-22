@@ -1,9 +1,5 @@
 package cn.sskbskdrin.log;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -65,11 +61,20 @@ public final class L {
     private static String DEFAULT_TAG = "DEFAULT_TAG";
     private static int INDENT = 2;
 
-    private static boolean enableJson = true;
-    private static boolean enableXML = true;
+    private static boolean enableJson = false;
+    private static boolean enableXML = false;
 
     private static LogHelper helper = new LoggerHelper();
     private static StringBuilder builder = new StringBuilder();
+
+    private static boolean JSON = false;
+
+    static {
+        try {
+            JSON = Class.forName("org.json.JSONObject") != null;
+        } catch (ClassNotFoundException e) {
+        }
+    }
 
     private L() {
     }
@@ -129,6 +134,13 @@ public final class L {
     }
 
     public static void enableJsonOrXml(boolean json, boolean xml) {
+        if (json) {
+            try {
+                Class.forName("org.json.JSONObject");
+            } catch (ClassNotFoundException e) {
+                throw new IllegalArgumentException("环境不支持 json, 没有找到org.json.JSONObject");
+            }
+        }
         enableJson = json;
         enableXML = xml;
     }
@@ -145,11 +157,11 @@ public final class L {
     public static void append(String msg) {
         if (msg != null) {
             String temp = null;
-            if (enableJson) {
-                temp = json(msg);
+            if (enableJson && JSON) {
+                temp = Json.json(msg, INDENT);
             }
             if (enableXML && temp == null) {
-                temp = xml(msg);
+                temp = xml(msg, INDENT);
             }
             if (temp != null) {
                 msg = temp;
@@ -219,23 +231,7 @@ public final class L {
         }
     }
 
-    private static String json(String json) {
-        json = json.trim();
-        try {
-            if (json.startsWith("{")) {
-                JSONObject jsonObject = new JSONObject(json);
-                return "\n" + jsonObject.toString(INDENT);
-            }
-            if (json.startsWith("[")) {
-                JSONArray jsonArray = new JSONArray(json);
-                return "\n" + jsonArray.toString(INDENT);
-            }
-        } catch (JSONException ignored) {
-        }
-        return null;
-    }
-
-    private static String xml(String xml) {
+    private static String xml(String xml, int indent) {
         xml = xml.trim();
         try {
             if (xml.startsWith("<")) {
@@ -244,8 +240,7 @@ public final class L {
                 Transformer transformer = TransformerFactory.newInstance().newTransformer();
                 transformer.setOutputProperty(OutputKeys.METHOD, "html");
                 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String
-                        .valueOf(INDENT));
+                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(indent));
                 transformer.transform(xmlInput, xmlOutput);
                 return "\n" + xmlOutput.getWriter().toString() + "\n";
             }

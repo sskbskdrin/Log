@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import cn.sskbskdrin.log.LogStrategy;
 import cn.sskbskdrin.log.Printer;
 
 import static cn.sskbskdrin.log.L.ASSERT;
@@ -17,14 +18,13 @@ public class DiskPrinter extends Printer {
 
     private static final String SEPARATOR = " ";
     private final Date date = new Date();
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd HH:mm:ss.SSS", Locale
-            .US);
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd HH:mm:ss.SSS", Locale.US);
 
     public DiskPrinter(String path) {
         this(new DiskLogStrategy(path));
     }
 
-    public DiskPrinter(DiskLogStrategy strategy) {
+    public DiskPrinter(LogStrategy strategy) {
         super(strategy);
     }
 
