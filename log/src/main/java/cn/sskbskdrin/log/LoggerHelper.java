@@ -21,7 +21,7 @@ class LoggerHelper implements LogHelper {
     LoggerHelper() {
         try {
             logcat = Class.forName("android.util.Log") != null;
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException ignored) {
         }
         defaultPrint = logcat ? new LogcatPrinter() : new ConsolePrinter();
         logPrinters.add(defaultPrint);
@@ -73,9 +73,7 @@ class LoggerHelper implements LogHelper {
             logPrinters.remove(defaultPrint);
             defaultPrint = null;
         }
-        if (!logPrinters.contains(printer)) {
-            logPrinters.add(printer);
-        }
+        logPrinters.add(printer);
     }
 
     private static String getStackTraceString(Throwable tr) {

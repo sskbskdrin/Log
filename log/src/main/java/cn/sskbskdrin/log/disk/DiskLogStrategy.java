@@ -104,7 +104,7 @@ public class DiskLogStrategy extends HandlerThread implements LogStrategy {
                     out.close();
                     out = null;
                 }
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
 

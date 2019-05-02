@@ -65,14 +65,14 @@ public final class L {
     private static boolean enableXML = false;
 
     private static LogHelper helper = new LoggerHelper();
-    private static StringBuilder builder = new StringBuilder();
+    private static final StringBuilder builder = new StringBuilder();
 
     private static boolean JSON = false;
 
     static {
         try {
             JSON = Class.forName("org.json.JSONObject") != null;
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException ignored) {
         }
     }
 
@@ -186,6 +186,10 @@ public final class L {
         println(WARN, DEFAULT_TAG, msg);
     }
 
+    public static void w(String msg, Throwable e) {
+        println(WARN, DEFAULT_TAG, msg, e);
+    }
+
     public static void e(String msg) {
         println(ERROR, DEFAULT_TAG, msg);
     }
@@ -210,12 +214,16 @@ public final class L {
         println(WARN, tag, msg);
     }
 
+    public static void w(String tag, String msg, Throwable e) {
+        println(WARN, tag, msg, e);
+    }
+
     public static void e(String tag, String msg) {
         println(ERROR, tag, msg);
     }
 
     public static void e(String tag, String msg, Throwable e) {
-        println(ERROR, tag, msg);
+        println(ERROR, tag, msg, e);
     }
 
     private static void println(int level, String tag, String msg) {

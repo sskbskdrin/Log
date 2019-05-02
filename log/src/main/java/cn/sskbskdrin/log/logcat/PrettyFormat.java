@@ -43,8 +43,8 @@ public class PrettyFormat implements Format {
     private static final String BOTTOM_BORDER = "└" + MIDDLE_BORDER + MIDDLE_BORDER + MIDDLE_BORDER;
     private static final String METHOD_INFO = "%s%s.%s (%s:%s)";
 
-    private int methodCount = 10;
-    private int methodOffset = 0;
+    private int methodCount;
+    private int methodOffset;
     private boolean logMethod = true;
 
     private final StringBuilder mBuilder;
