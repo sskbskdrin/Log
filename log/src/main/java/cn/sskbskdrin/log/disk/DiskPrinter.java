@@ -6,13 +6,7 @@ import java.util.Locale;
 
 import cn.sskbskdrin.log.LogStrategy;
 import cn.sskbskdrin.log.Printer;
-
-import static cn.sskbskdrin.log.L.ASSERT;
-import static cn.sskbskdrin.log.L.DEBUG;
-import static cn.sskbskdrin.log.L.ERROR;
-import static cn.sskbskdrin.log.L.INFO;
-import static cn.sskbskdrin.log.L.VERBOSE;
-import static cn.sskbskdrin.log.L.WARN;
+import cn.sskbskdrin.log.SSKLog;
 
 public class DiskPrinter extends Printer {
 
@@ -44,17 +38,17 @@ public class DiskPrinter extends Printer {
 
     private static String logLevel(int value) {
         switch (value) {
-            case VERBOSE:
+            case SSKLog.VERBOSE:
                 return "VERBOSE";
-            case DEBUG:
+            case SSKLog.DEBUG:
                 return "DEBUG";
-            case INFO:
+            case SSKLog.INFO:
                 return "INFO";
-            case WARN:
+            case SSKLog.WARN:
                 return "WARN";
-            case ERROR:
+            case SSKLog.ERROR:
                 return "ERROR";
-            case ASSERT:
+            case SSKLog.ASSERT:
                 return "ASSERT";
             default:
                 return "UNKNOWN";

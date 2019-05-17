@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import cn.sskbskdrin.log.Format;
-import cn.sskbskdrin.log.L;
 import cn.sskbskdrin.log.Printer;
+import cn.sskbskdrin.log.SSKLog;
 
 public class ConsolePrinter extends Printer {
 
@@ -30,23 +30,23 @@ public class ConsolePrinter extends Printer {
         String type = "";
         String start = "";
         switch (priority) {
-            case L.VERBOSE:
+            case SSKLog.VERBOSE:
                 type = " V/";
                 start = "\u001b[30;37m";
                 break;
-            case L.DEBUG:
+            case SSKLog.DEBUG:
                 type = " D/";
                 start = "\u001b[30;34m";
                 break;
-            case L.INFO:
+            case SSKLog.INFO:
                 type = " I/";
                 start = "\u001b[30;32m";
                 break;
-            case L.WARN:
+            case SSKLog.WARN:
                 type = " W/";
                 start = "\u001b[30;33m";
                 break;
-            case L.ERROR:
+            case SSKLog.ERROR:
                 type = " E/";
                 start = "\u001b[30;31m";
                 break;
