@@ -84,7 +84,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 task makeJar(type: Jar){
     delete 'build/libs/'
-    from('build/intermediates/classes/release/')
+    from('build/intermediates/javac/release/compileReleaseJavaWithJavac/classes')
     exclude('BuildConfig.class', 'R.class')
 }
 
