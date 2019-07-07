@@ -57,7 +57,7 @@ public class ConsolePrinter extends Printer {
     }
 
     @Override
-    public String format(String msg) {
+    protected String format(String msg) {
         return msg + "\u001b[0m";
     }
 

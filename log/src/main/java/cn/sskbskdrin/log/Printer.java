@@ -5,7 +5,7 @@ package cn.sskbskdrin.log;
  */
 public abstract class Printer implements LogStrategy {
 
-    public static final String NEW_LINE = System.getProperty("line.separator");
+    protected static final String NEW_LINE = System.getProperty("line.separator");
 
     private Format format;
     private LogStrategy strategy;
@@ -58,7 +58,7 @@ public abstract class Printer implements LogStrategy {
      * @param tag      is the given tag for the log message.
      * @param message  is the given message for the log message.
      */
-    public final synchronized void log(int priority, String tag, String message) {
+    final synchronized void log(int priority, String tag, String message) {
         if (isLoggable(priority, tag)) {
             if (format != null) {
                 tag = format.formatTag(priority, tag);
