@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
-
-    <Button
-        android:id="@+id/log_open"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="log"/>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/log_content"
@@ -53,4 +47,14 @@
             android:dividerHeight="1dp"
             android:listSelector="@android:color/transparent"/>
     </FrameLayout>
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/log_open"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="log"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"/>
+
+</FrameLayout>
