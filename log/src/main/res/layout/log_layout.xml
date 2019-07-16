@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:background="@android:color/white"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -52,6 +52,7 @@
         android:id="@+id/log_open"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_gravity="center_vertical|right"
         android:gravity="center"
         android:text="log"
         android:textColor="@android:color/white"

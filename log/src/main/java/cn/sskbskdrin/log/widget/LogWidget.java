@@ -71,7 +71,7 @@ public class LogWidget {
             Log log = getItem(position);
             if (log != null) {
                 TextView view = (TextView) convertView;
-                view.setText(log.content);
+                view.setText(log.getContent());
                 view.setTextColor(log.color());
             }
             return convertView;
@@ -131,6 +131,11 @@ public class LogWidget {
                             }
                             break;
                         case MotionEvent.ACTION_UP:
+                            if (v.getX() < parentSize.x / 2) {
+                                v.setX(0);
+                            } else {
+                                v.setX(parentSize.x - v.getWidth());
+                            }
                             if (Math.abs(move.x) < 5 || Math.abs(move.y) < 5) {
                                 int show = root.findViewById(R.id.log_content).getVisibility();
                                 root.findViewById(R.id.log_content).setVisibility(show == View.VISIBLE ? View.GONE :

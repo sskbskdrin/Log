@@ -4,7 +4,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
-import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +109,8 @@ abstract class LogCache extends Printer {
             }
         }
         if (log.priority >= mLevel) {
-            if (TextUtils.isEmpty(filterContent) || log.content.contains(filterContent)) {
+            if (log.checkSpan()) {
+                //            if (TextUtils.isEmpty(filterContent) || log.content.contains(filterContent)) {
                 mList.add(log);
             }
         }
@@ -119,9 +119,11 @@ abstract class LogCache extends Printer {
 
     private void filter() {
         mList.clear();
+        Log.filter(filterContent);
         for (Log log : mCache) {
             if (log.priority >= mLevel) {
-                if (TextUtils.isEmpty(filterContent) || log.content.contains(filterContent)) {
+                if (log.checkSpan()) {
+                    //                if (TextUtils.isEmpty(filterContent) || log.content.contains(filterContent)) {
                     mList.add(log);
                 }
             }
