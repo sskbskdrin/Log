@@ -66,27 +66,31 @@ abstract class LogCache extends Printer {
 
     void setLevel(int level) {
         mLevel = level;
-        workHandler.sendEmptyMessage(WHAT_FILTER);
+        getWorkHandler().sendEmptyMessage(WHAT_FILTER);
     }
 
     void setFilter(String content) {
         filterContent = content;
-        workHandler.sendEmptyMessage(WHAT_FILTER);
+        getWorkHandler().sendEmptyMessage(WHAT_FILTER);
     }
 
     void clear() {
-        workHandler.sendEmptyMessage(WHAT_CLEAR);
+        getWorkHandler().sendEmptyMessage(WHAT_CLEAR);
     }
 
-    @Override
-    public void print(int priority, String tag, String message) {
+    private Handler getWorkHandler() {
         if (mThreadHandler == null) {
             mThreadHandler = new HandlerThread("LogCache");
             mThreadHandler.start();
             workHandler = new WorkHandler(mThreadHandler.getLooper());
         }
+        return workHandler;
+    }
+
+    @Override
+    public void print(int priority, String tag, String message) {
         lock.lock();
-        Message.obtain(workHandler, WHAT_ADD, new Log(priority, tag, message)).sendToTarget();
+        Message.obtain(getWorkHandler(), WHAT_ADD, new Log(priority, tag, message)).sendToTarget();
         lock.unlock();
     }
 

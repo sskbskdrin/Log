@@ -1,6 +1,7 @@
 package cn.sskbskdrin.log.widget;
 
 import android.app.Activity;
+import android.app.Application;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -36,7 +37,7 @@ public class LogWidget {
 
     private LogWidget() {}
 
-    private static LogWidget getInstance() {
+    static LogWidget getInstance() {
         if (instance == null) {
             instance = new LogWidget();
         }
@@ -91,11 +92,14 @@ public class LogWidget {
         getInstance().printer.setCacheMax(size);
     }
 
-    public static void attach(Activity activity) {
-        getInstance().init(activity);
+    public static void init(Application context) {
+        if (context == null) {
+            throw new IllegalArgumentException("context is null");
+        }
+        context.registerActivityLifecycleCallbacks(LogLifecycle.getInstance());
     }
 
-    private void init(Activity activity) {
+    void attach(Activity activity) {
         if (root == null) {
             root = View.inflate(activity, R.layout.log_layout, null);
             listView = root.findViewById(R.id.log_list);
@@ -195,7 +199,15 @@ public class LogWidget {
         group.addView(root);
     }
 
-    public static void detach() {
+    public static void clearCache() {
+        ((LogCache) getPrinter()).clear();
+    }
+
+    static void destroy() {
+        instance = null;
+    }
+
+    static void detach() {
         if (getInstance().root != null && getInstance().root.getParent() != null) {
             ((ViewGroup) getInstance().root.getParent()).removeView(getInstance().root);
         }

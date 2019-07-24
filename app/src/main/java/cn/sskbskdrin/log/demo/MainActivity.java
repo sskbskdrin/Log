@@ -17,6 +17,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        LogWidget.init(getApplication());
 
         L.tag("ayke", "");
         L.addPinter(LogWidget.getPrinter());
@@ -44,6 +45,5 @@ public class MainActivity extends Activity {
         L.d("<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "<FrameLayout " + "xmlns:android=\"http://schemas.android" + ".com/apk/res/android\"" + "             " + "android:layout_width=\"match_parent\"" + "             " + "android:layout_height=\"match_parent\">" + "" + "    <TextView" + "        " + "android:layout_width" + "=\"wrap_content\"" + "        " + "android:layout_height=\"wrap_content\"" + "        " + "android:text=\"Hello " + "World!\"/>" + "" + "</FrameLayout>");
 
         L.e("null ", new NullPointerException());
-        LogWidget.attach(this);
     }
 }
