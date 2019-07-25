@@ -12,7 +12,6 @@ import android.util.Log;
  */
 class LogLifecycle implements Application.ActivityLifecycleCallbacks {
     private static final String TAG = "LogLifecycle";
-    private int showCount = 0;
 
     private static LogLifecycle instance;
 
@@ -36,12 +35,10 @@ class LogLifecycle implements Application.ActivityLifecycleCallbacks {
     @Override
     public void onActivityResumed(Activity activity) {
         LogWidget.getInstance().attach(activity);
-        showCount++;
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
-        showCount--;
     }
 
     @Override
@@ -56,8 +53,5 @@ class LogLifecycle implements Application.ActivityLifecycleCallbacks {
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        if (showCount <= 0) {
-            LogWidget.destroy();
-        }
     }
 }

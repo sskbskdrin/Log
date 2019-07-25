@@ -203,10 +203,6 @@ public class LogWidget {
         ((LogCache) getPrinter()).clear();
     }
 
-    static void destroy() {
-        instance = null;
-    }
-
     static void detach() {
         if (getInstance().root != null && getInstance().root.getParent() != null) {
             ((ViewGroup) getInstance().root.getParent()).removeView(getInstance().root);
