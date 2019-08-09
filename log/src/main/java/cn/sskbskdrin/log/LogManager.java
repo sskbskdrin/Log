@@ -1,24 +1,24 @@
 package cn.sskbskdrin.log;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 import cn.sskbskdrin.log.console.ConsolePrinter;
 import cn.sskbskdrin.log.logcat.LogcatPrinter;
 
-class LoggerHelper implements LogHelper {
+class LogManager implements LogHelper {
 
-    private String localTag = "";
+    private String globalTag;
 
     private final Set<Printer> logPrinters = new HashSet<>();
     private Printer defaultPrint;
 
     private static boolean logcat;
+    private boolean useGlobalTag;
+    private ReentrantLock lock = new ReentrantLock(true);
 
-    LoggerHelper() {
+    LogManager() {
         try {
             logcat = Class.forName("android.util.Log") != null;
         } catch (ClassNotFoundException ignored) {
@@ -29,39 +29,56 @@ class LoggerHelper implements LogHelper {
 
     @Override
     public void tag(String tag) {
-        localTag = tag;
+        globalTag = tag;
+        useGlobalTag = globalTag != null && globalTag.length() > 0;
     }
 
     @Override
-    public synchronized void log(int priority, String tag, String message, Throwable throwable) {
-        if (throwable != null) {
+    public void log(int priority, String tag, String message, Object... obj) {
+        if (obj != null && obj.length > 0) {
             if (message == null) {
                 message = "";
             }
-            message += "\n" + getStackTraceString(throwable);
+
+            int maxLength = obj.length;
+            String[] mm = message.split("\\{}");
+            if (mm.length > maxLength) {
+                maxLength = mm.length;
+            }
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < maxLength; i++) {
+                if (i < mm.length) {
+                    builder.append(mm[i]);
+                }
+                if (i < obj.length) {
+                    Utils.objToString(builder, obj[i]);
+                }
+            }
+            message = builder.toString();
         }
+
         if (message == null || message.length() == 0) {
             message = "Empty/NULL log message";
         }
-        if (useGlobalTag()) {
+        if (useGlobalTag) {
             if (tag != null && tag.length() > 0) {
                 message = tag + ": " + message;
             }
-            tag = localTag;
+            tag = globalTag;
         }
-        for (Printer printer : logPrinters) {
-            printer.log(priority, tag, message);
+        lock.lock();
+        try {
+            for (Printer printer : logPrinters) {
+                printer.log(priority, tag, message);
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
     @Override
     public void clearAdapters() {
         logPrinters.clear();
-    }
-
-    @Override
-    public boolean useGlobalTag() {
-        return localTag != null && localTag.length() > 0;
     }
 
     @Override
@@ -75,23 +92,4 @@ class LoggerHelper implements LogHelper {
         }
         logPrinters.add(printer);
     }
-
-    private static String getStackTraceString(Throwable tr) {
-        if (tr == null) {
-            return "";
-        }
-        Throwable t = tr;
-        while (t != null) {
-            if (t instanceof UnknownHostException) {
-                return "";
-            }
-            t = t.getCause();
-        }
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        tr.printStackTrace(pw);
-        pw.flush();
-        return sw.toString();
-    }
-
 }

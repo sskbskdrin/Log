@@ -86,4 +86,9 @@ public abstract class Printer implements LogStrategy {
     protected boolean filter(int priority, String tag) {
         return true;
     }
+
+    @Override
+    public int hashCode() {
+        return getClass().getName().hashCode();
+    }
 }

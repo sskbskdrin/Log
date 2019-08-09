@@ -31,7 +31,7 @@ public class SSKLog {
     private static boolean enableJson = false;
     private static boolean enableXML = false;
 
-    private LogHelper helper = new LoggerHelper();
+    private LogHelper helper = new LogManager();
     private final StringBuilder builder = new StringBuilder();
 
     private static boolean JSON = false;

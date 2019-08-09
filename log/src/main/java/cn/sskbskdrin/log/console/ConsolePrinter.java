@@ -53,7 +53,7 @@ public class ConsolePrinter extends Printer {
             default:
         }
         date.setTime(System.currentTimeMillis());
-        return start + dateFormat.format(date) + Thread.currentThread().getId() + type + tag + ": ";
+        return start + dateFormat.format(date) + " " + Thread.currentThread().getId() + type + tag + ": ";
     }
 
     @Override
