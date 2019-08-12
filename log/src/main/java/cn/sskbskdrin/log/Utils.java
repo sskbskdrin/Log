@@ -1,8 +1,21 @@
 package cn.sskbskdrin.log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.UnknownHostException;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 /**
  * Created by ex-keayuan001 on 2019-08-09.
@@ -10,12 +23,15 @@ import java.net.UnknownHostException;
  * @author ex-keayuan001
  */
 class Utils {
+
+    private static final String NULL = "null";
+
     static void objToString(StringBuilder builder, Object obj) {
         if (builder == null) {
             return;
         }
         if (obj == null) {
-            builder.append("null");
+            builder.append(NULL);
         } else if (obj instanceof Throwable) {
             builder.append('\n');
             builder.append(getStackTraceString((Throwable) obj));
@@ -23,12 +39,27 @@ class Utils {
             builder.append('[');
             arrayString(builder, obj);
             builder.append(']');
+        } else if (obj instanceof JSONObject) {
+            builder.append('\n');
+            builder.append(getJSON((JSONObject) obj));
+        } else if (obj instanceof JSONArray) {
+            builder.append('\n');
+            builder.append(getJSON((JSONArray) obj));
+        } else if (obj instanceof String) {
+            String temp = (String) obj;
+            if (LogManager.enableXML) {
+                temp = xml((String) obj, 2);
+            }
+            if (LogManager.enableJson) {
+                temp = json(temp, 2);
+            }
+            builder.append(temp);
         } else {
             builder.append(obj);
         }
     }
 
-    static void arrayString(StringBuilder builder, Object obj) {
+    private static void arrayString(StringBuilder builder, Object obj) {
         if (obj instanceof boolean[]) {
             boolString(builder, (boolean[]) obj);
         } else if (obj instanceof byte[]) {
@@ -142,7 +173,7 @@ class Utils {
 
     private static String getStackTraceString(Throwable tr) {
         if (tr == null) {
-            return "";
+            return NULL;
         }
         Throwable t = tr;
         while (t != null) {
@@ -158,4 +189,55 @@ class Utils {
         return sw.toString();
     }
 
+    private static String getJSON(JSONObject object) {
+        try {
+            if (object != null) {
+                return object.toString(2);
+            }
+        } catch (JSONException ignored) {
+        }
+        return object == null ? NULL : object.toString();
+    }
+
+    private static String getJSON(JSONArray array) {
+        try {
+            if (array != null) {
+                return array.toString(2);
+            }
+        } catch (JSONException ignored) {
+        }
+        return array == null ? NULL : array.toString();
+    }
+
+    private static String json(String json, int indent) {
+        try {
+            if (json.startsWith("{")) {
+                JSONObject jsonObject = new JSONObject(json);
+                return "\n" + jsonObject.toString(indent);
+            }
+            if (json.startsWith("[")) {
+                JSONArray jsonArray = new JSONArray(json);
+                return "\n" + jsonArray.toString(indent);
+            }
+        } catch (JSONException ignored) {
+        }
+        return json;
+    }
+
+    private static String xml(String xml, int indent) {
+        try {
+            if (xml.startsWith("<")) {
+                Source xmlInput = new StreamSource(new StringReader(xml));
+                StreamResult xmlOutput = new StreamResult(new StringWriter());
+                Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                transformer.setOutputProperty(OutputKeys.METHOD, "html");
+                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(indent));
+                transformer.transform(xmlInput, xmlOutput);
+                return "\n" + xmlOutput.getWriter().toString() + "\n";
+            }
+        } catch (TransformerException ignored) {
+        }
+        return xml;
+    }
 }

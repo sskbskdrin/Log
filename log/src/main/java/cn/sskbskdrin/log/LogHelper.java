@@ -4,7 +4,7 @@ package cn.sskbskdrin.log;
  * A proxy interface to enable additional operations.
  * Contains all possible Log message usages.
  */
-public interface LogHelper {
+interface LogHelper {
 
     /**
      * 添加打印者
@@ -24,6 +24,14 @@ public interface LogHelper {
      * @param tag 全局tag
      */
     void tag(String tag);
+
+    /**
+     * 格式化json 或者 xml
+     *
+     * @param json 是否格式化json
+     * @param xml  是否格式化xml
+     */
+    void formatJSONorXML(boolean json, boolean xml);
 
     /**
      * 打印日志

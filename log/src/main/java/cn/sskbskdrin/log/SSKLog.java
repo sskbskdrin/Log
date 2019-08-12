@@ -1,16 +1,5 @@
 package cn.sskbskdrin.log;
 
-import java.io.StringReader;
-import java.io.StringWriter;
-
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
 /**
  * Created by ex-keayuan001 on 2019-05-17.
  *
@@ -26,22 +15,10 @@ public class SSKLog {
     public static final int ASSERT = 7;
 
     private static String DEFAULT_TAG = "DEFAULT_TAG";
-    private static int INDENT = 2;
 
-    private static boolean enableJson = false;
-    private static boolean enableXML = false;
+    private final LogHelper helper = new LogManager();
 
-    private LogHelper helper = new LogManager();
-    private final StringBuilder builder = new StringBuilder();
-
-    private static boolean JSON = false;
-
-    static {
-        try {
-            JSON = Class.forName("org.json.JSONObject") != null;
-        } catch (ClassNotFoundException ignored) {
-        }
-    }
+    private int level = VERBOSE;
 
     /**
      * 设置全局tag
@@ -49,22 +26,11 @@ public class SSKLog {
      * @param globalTag  全局tag
      * @param defaultTag 默认tag
      */
-    public void tag(String globalTag, String defaultTag) {
-        if (helper != null) {
-            helper.tag(globalTag);
-        }
+    public final void tag(String globalTag, String defaultTag) {
+        helper.tag(globalTag);
         if (defaultTag != null) {
             DEFAULT_TAG = defaultTag;
         }
-    }
-
-    /**
-     * 设置自定义helper
-     *
-     * @param helper 自定义LogHelper
-     */
-    public void helper(LogHelper helper) {
-        this.helper = helper;
     }
 
     /**
@@ -80,144 +46,77 @@ public class SSKLog {
      * @see cn.sskbskdrin.log.disk.DiskPrinter
      * @see cn.sskbskdrin.log.console.ConsolePrinter
      */
-    public void addPinter(Printer... printers) {
-        if (helper != null && printers != null) {
+    public final void addPinter(Printer... printers) {
+        if (printers != null) {
             for (Printer printer : printers) {
-                helper.addPrinter(printer);
+                if (printer != null) {
+                    helper.addPrinter(printer);
+                }
             }
         }
+    }
+
+    /**
+     * 设置打印的log的优先级
+     * <ul>
+     * <li>{@link SSKLog#VERBOSE}</li>
+     * <li>{@link SSKLog#DEBUG}</li>
+     * <li>{@link SSKLog#INFO}</li>
+     * <li>{@link SSKLog#WARN}</li>
+     * <li>{@link SSKLog#ERROR}</li>
+     * <li>{@link SSKLog#ASSERT}</li>
+     * </ul>
+     *
+     * @param level 优先级
+     */
+    public void setLogLevel(int level) {
+        this.level = level;
     }
 
     /**
      * 清除所有打印者
      */
-    public void clearPrinters() {
-        if (helper != null) {
-            helper.clearAdapters();
-        }
-    }
-
-    public void enableJsonOrXml(boolean json, boolean xml) {
-        if (json) {
-            try {
-                Class.forName("org.json.JSONObject");
-            } catch (ClassNotFoundException e) {
-                throw new IllegalArgumentException("环境不支持 json, 没有找到org.json.JSONObject");
-            }
-        }
-        enableJson = json;
-        enableXML = xml;
-    }
-
-    public void indent(int indent) {
-        INDENT = indent;
+    public final void clearPrinters() {
+        helper.clearAdapters();
     }
 
     /**
-     * 追加打印内容，将同下一次打印一起被输出
+     * 格式化json 或者 xml
      *
-     * @param msg 追加内容
+     * @param json 是否格式化json
+     * @param xml  是否格式化xml
      */
-    public void append(String msg) {
-        if (msg != null) {
-            String temp = null;
-            if (enableJson && JSON) {
-                temp = Json.json(msg, INDENT);
+    public final void enableJsonOrXml(boolean json, boolean xml) {
+        helper.formatJSONorXML(json, xml);
+    }
+
+    public void v(String tag, String msg, Object... obj) {
+        println(VERBOSE, tag, msg, obj);
+    }
+
+    public void d(String tag, String msg, Object... obj) {
+        println(DEBUG, tag, msg, obj);
+    }
+
+    public void i(String tag, String msg, Object... obj) {
+        println(INFO, tag, msg, obj);
+    }
+
+    public void w(String tag, String msg, Object... obj) {
+        println(WARN, tag, msg, obj);
+    }
+
+    public void e(String tag, String msg, Object... obj) {
+        println(ERROR, tag, msg, obj);
+    }
+
+    public void println(int priority, String tag, String msg, Object... obj) {
+        if (level <= priority) {
+            if (tag == null) {
+                tag = DEFAULT_TAG;
             }
-            if (enableXML && temp == null) {
-                temp = xml(msg, INDENT);
-            }
-            if (temp != null) {
-                msg = temp;
-            }
-        }
-        builder.append(msg);
-    }
-
-    public void v(String msg) {
-        println(VERBOSE, DEFAULT_TAG, msg);
-    }
-
-    public void d(String msg) {
-        println(DEBUG, DEFAULT_TAG, msg);
-    }
-
-    public void i(String msg) {
-        println(INFO, DEFAULT_TAG, msg);
-    }
-
-    public void w(String msg) {
-        println(WARN, DEFAULT_TAG, msg);
-    }
-
-    public void w(String msg, Throwable e) {
-        println(WARN, DEFAULT_TAG, msg, e);
-    }
-
-    public void e(String msg) {
-        println(ERROR, DEFAULT_TAG, msg);
-    }
-
-    public void e(String msg, Throwable e) {
-        println(ERROR, DEFAULT_TAG, msg, e);
-    }
-
-    public void v(String tag, String msg) {
-        println(VERBOSE, tag, msg);
-    }
-
-    public void d(String tag, String msg) {
-        println(DEBUG, tag, msg);
-    }
-
-    public void i(String tag, String msg) {
-        println(INFO, tag, msg);
-    }
-
-    public void w(String tag, String msg) {
-        println(WARN, tag, msg);
-    }
-
-    public void w(String tag, String msg, Throwable e) {
-        println(WARN, tag, msg, e);
-    }
-
-    public void e(String tag, String msg) {
-        println(ERROR, tag, msg);
-    }
-
-    public void e(String tag, String msg, Throwable e) {
-        println(ERROR, tag, msg, e);
-    }
-
-    private void println(int level, String tag, String msg) {
-        println(level, tag, msg, null);
-    }
-
-    private void println(int level, String tag, String msg, Throwable e) {
-        if (helper != null) {
-            append(msg);
-            msg = builder.toString();
-            builder.setLength(0);
-            helper.log(level, tag, msg, e);
+            helper.log(priority, tag, msg, obj);
         }
     }
 
-    private static String xml(String xml, int indent) {
-        xml = xml.trim();
-        try {
-            if (xml.startsWith("<")) {
-                Source xmlInput = new StreamSource(new StringReader(xml));
-                StreamResult xmlOutput = new StreamResult(new StringWriter());
-                Transformer transformer = TransformerFactory.newInstance().newTransformer();
-                transformer.setOutputProperty(OutputKeys.METHOD, "html");
-                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(indent));
-                transformer.transform(xmlInput, xmlOutput);
-                return "\n" + xmlOutput.getWriter().toString() + "\n";
-            }
-        } catch (TransformerException ignored) {
-        }
-        return null;
-    }
 }

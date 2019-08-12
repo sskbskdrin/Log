@@ -56,15 +56,6 @@ public final class L {
     }
 
     /**
-     * 设置自定义helper
-     *
-     * @param helper 自定义LogHelper
-     */
-    public static void helper(LogHelper helper) {
-        log.helper(helper);
-    }
-
-    /**
      * 添加打印者
      * <ul>
      * <li>Different {@link cn.sskbskdrin.log.logcat.LogcatPrinter}</li>
@@ -92,73 +83,52 @@ public final class L {
         log.enableJsonOrXml(json, xml);
     }
 
-    public static void indent(int indent) {
-        log.indent(indent);
-    }
-
-    /**
-     * 追加打印内容，将同下一次打印一起被输出
-     *
-     * @param msg 追加内容
-     */
-    public static void append(String msg) {
-        log.append(msg);
-    }
-
     public static void v(String msg) {
-        log.v(msg);
+        log.v(null, msg);
     }
 
     public static void d(String msg) {
-        log.d(msg);
+        log.d(null, msg);
     }
 
     public static void i(String msg) {
-        log.i(msg);
+        log.i(null, msg);
     }
 
     public static void w(String msg) {
-        log.w(msg);
+        log.w(null, msg);
     }
 
     public static void w(String msg, Throwable e) {
-        log.w(msg, e);
+        log.w(null, msg, e);
     }
 
     public static void e(String msg) {
-        log.e(msg);
+        log.e(null, msg);
     }
 
     public static void e(String msg, Throwable e) {
-        log.e(msg, e);
+        log.e(null, msg, e);
     }
 
-    public static void v(String tag, String msg) {
+    public static void v(String tag, String msg, Object... obj) {
         log.v(tag, msg);
     }
 
-    public static void d(String tag, String msg) {
-        log.d(tag, msg);
+    public static void d(String tag, String msg, Object... obj) {
+        log.d(tag, msg, obj);
     }
 
-    public static void i(String tag, String msg) {
-        log.i(tag, msg);
+    public static void i(String tag, String msg, Object... obj) {
+        log.i(tag, msg, obj);
     }
 
-    public static void w(String tag, String msg) {
-        log.w(tag, msg);
+    public static void w(String tag, String msg, Object... obj) {
+        log.w(tag, msg, obj);
     }
 
-    public static void w(String tag, String msg, Throwable e) {
-        log.w(tag, msg, e);
-    }
-
-    public static void e(String tag, String msg) {
-        log.w(tag, msg);
-    }
-
-    public static void e(String tag, String msg, Throwable e) {
-        log.w(tag, msg, e);
+    public static void e(String tag, String msg, Object... obj) {
+        log.e(tag, msg, obj);
     }
 
 }

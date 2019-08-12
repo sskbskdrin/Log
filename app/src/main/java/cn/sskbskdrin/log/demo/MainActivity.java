@@ -3,7 +3,7 @@ package cn.sskbskdrin.log.demo;
 import android.app.Activity;
 import android.os.Bundle;
 
-import cn.sskbskdrin.log.L;
+import cn.sskbskdrin.log.SSKLog;
 import cn.sskbskdrin.log.disk.DiskPrinter;
 import cn.sskbskdrin.log.logcat.LogcatPrinter;
 import cn.sskbskdrin.log.logcat.PrettyFormat;
@@ -19,6 +19,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         LogWidget.init(getApplication());
 
+        final SSKLog L = new SSKLog();
+
         L.tag("ayke", "");
         L.addPinter(LogWidget.getPrinter());
         L.addPinter(new LogcatPrinter(new PrettyFormat()).setNew(true));
@@ -26,24 +28,19 @@ public class MainActivity extends Activity {
         findViewById(android.R.id.content).postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (count > 10) {
+                if (count < 0) {
                     return;
                 }
                 findViewById(android.R.id.content).postDelayed(this, 1000);
-                L.w("test" + count++);
-                L.d("<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "<FrameLayout " + "xmlns:android=\"http://schemas" +
+                L.w("","test" + count--);
+                L.d("","{}","<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "<FrameLayout " + "xmlns:android=\"http" +
+                    "://schemas" +
                     ".android" + ".com/apk/res/android\"" + "             " + "android:layout_width=\"match_parent\"" + "             " + "android:layout_height=\"match_parent\">" + "" + "    <TextView" + "        " + "android:layout_width" + "=\"wrap_content\"" + "        " + "android:layout_height=\"wrap_content\"" + "        " + "android:text=\"Hello " + "World!\"/>" + "" + "</FrameLayout>");
             }
         }, 1000);
-        L.append("wwwww");
-        L.append("\nwwwwwrtyuio");
-        L.append("\nwwwwwfsdfs");
-        L.d("56789876");
+        L.d("wwwww","\nwwwwwrtyuio");
         L.enableJsonOrXml(true, true);
-        L.append("sskbskdrin");
-        L.d("[{\"a\":234},{\"b\":543}]");
-        L.d("<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "<FrameLayout " + "xmlns:android=\"http://schemas.android" + ".com/apk/res/android\"" + "             " + "android:layout_width=\"match_parent\"" + "             " + "android:layout_height=\"match_parent\">" + "" + "    <TextView" + "        " + "android:layout_width" + "=\"wrap_content\"" + "        " + "android:layout_height=\"wrap_content\"" + "        " + "android:text=\"Hello " + "World!\"/>" + "" + "</FrameLayout>");
-
-        L.e("null ", new NullPointerException());
+        L.d("","sskbskdrin{}","[{\"a\":234},{\"b\":543}]");
+        L.e("", "null ", new NullPointerException());
     }
 }
