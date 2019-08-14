@@ -4,7 +4,7 @@ Android日志库
 引用
 
 ```
-	implementation 'cn.sskbskdrin:log:0.3.0'
+	implementation 'cn.sskbskdrin:log:0.3.1'
 ```
 
 通过静态方法打印
