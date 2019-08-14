@@ -17,7 +17,7 @@ import cn.sskbskdrin.log.Printer;
  * @author sskbskdrin
  * @date 2019-07-07
  */
-abstract class LogCache extends Printer {
+abstract class LogCache extends Printer implements ViewFilter {
 
     private static int maxSize = 256 * 1024;
 
@@ -64,18 +64,15 @@ abstract class LogCache extends Printer {
         maxSize = size;
     }
 
-    void setLevel(int level) {
+    @Override
+    public void onFilter(boolean clear, int level, String content) {
         mLevel = level;
-        getWorkHandler().sendEmptyMessage(WHAT_FILTER);
-    }
-
-    void setFilter(String content) {
         filterContent = content;
+        if (clear) {
+            getWorkHandler().sendEmptyMessage(WHAT_CLEAR);
+            return;
+        }
         getWorkHandler().sendEmptyMessage(WHAT_FILTER);
-    }
-
-    void clear() {
-        getWorkHandler().sendEmptyMessage(WHAT_CLEAR);
     }
 
     private Handler getWorkHandler() {

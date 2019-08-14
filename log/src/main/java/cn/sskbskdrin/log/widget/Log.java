@@ -49,7 +49,7 @@ final class Log {
     }
 
     static void filter(String reg) {
-        pattern = TextUtils.isEmpty(reg) ? null : Pattern.compile(reg);
+        pattern = TextUtils.isEmpty(reg) ? null : Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
     }
 
     boolean checkSpan() {

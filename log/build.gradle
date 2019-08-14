@@ -8,7 +8,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 1
-        versionName "0.3.0"
+        versionName "0.3.1"
     }
     buildTypes {
         release {
@@ -22,5 +22,5 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 }
 
-apply from: "https://sskbskdrin.github.io/bintray.gradle"
-//apply from: "bintray.gradle_temp"
+//apply from: "https://sskbskdrin.github.io/bintray.gradle"
+apply from: "bintray.gradle"
